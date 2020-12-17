@@ -61,14 +61,14 @@ def saveData():
             #
         
             #Get the index of the row to have data extracted from.
-            filePrefix = targetID + '_VisInspection_'
+            filePrefix = 'VPX%s-W%05d_VisInspection_' % (vpx, int(wafer)) 
             row = IDs.index(targetID)
 
             #Get the strings to make the header file.
             SN = SNs[row]
             location = locations[row]
             sensorType = sensorTypes[row]
-            date = dt.datetime.now().date()
+            date = dt.datetime.now().strftime('%d %b %Y')
             time = dt.datetime.now().time()
             time = time.replace(microsecond=0)
 
@@ -91,13 +91,13 @@ def saveData():
             f.write(fileName + '\n')
             f.write('Type: ' + sensorType + '\n')
             f.write('Batch: VPX' + vpx + '\n')
-            f.write('Wafer: ' + wafer + '\n')
+            f.write('Wafer: %05d\n' % int(wafer))
             f.write('Component: ' + SN + '\n')
             f.write('Date: ' + str(date) + '\n')
             f.write('Time: '+ str(time) + '\n')
             f.write('Institute: ' + location + '\n')
             f.write('TestType: ATLAS18_VIS_INSPECTION_V1\n')
-            f.write('Pass: ' + passFail.get(passFail.curselection()[0]) + '\n')
+            f.write('Result: ' + passFail.get(passFail.curselection()[0]) + '\n')
             f.write('Comments: ' + comment + '\n')
             index = 1
             for i in range(10) :
@@ -136,6 +136,10 @@ passFail = tk.Listbox(frame, width = 5, relief = 'groove', height = '2')
 passFail.place(x = entryX + 140, y = entryY)
 passFail.insert(0,"Pass")
 passFail.insert(1,"Fail")
+
+
+
+
 
 #Setup the File entry blocks
 fileEntryLabel = tk.Label(frame, text = "Image Names")

@@ -46,15 +46,16 @@ def SaveData():
             'has been recived and the inventory list has been updated.')
         else : 
             #Get the index of the row to have data extracted from.
-            filePrefix = targetID + '_MAINThickness_'
+            filePrefix = 'VPX%s-W%05d_HMThickness_' % (vpx, int(wafer)) 
             row = IDs.index(targetID)
 
             #Get the strings to make the header file.
             SN = SNs[row]
             location = locations[row]
             sensorType = sensorTypes[row]
-            date = dt.datetime.now().date()
+            date = dt.datetime.now().strftime('%d %b %Y')
             time = dt.datetime.now().time()
+            time = time.replace(microsecond=0)
 
             # Determine the data file to write to.
             numfile = 1
@@ -75,12 +76,12 @@ def SaveData():
             f.write(fileName + '\n')
             f.write('Type: ' + sensorType + '\n')
             f.write('Batch: VPX' + vpx + '\n')
-            f.write('Wafer: ' + wafer + '\n')
+            f.write('Wafer: %05d\n' % int(wafer))
             f.write('Component: ' + SN + '\n')
             f.write('Date: ' + str(date) + '\n')
             f.write('Time: '+ str(time) + '\n')
             f.write('Institute: ' + location + '\n')
-            f.write('TestType: ATLAS18_MAIN_THICKNESS_V1\n')
+            f.write('TestType: ATLAS18_HM_THICKNESS_V1\n')
             f.write('Instrument: ' + instrument + '\n')
             f.write('RunNumber: ' + str(numfile) + '\n')
             f.write('Comments: ' + comment + '\n')

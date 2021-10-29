@@ -27,26 +27,26 @@ def SaveData():
         config = open('thickness_config.txt', 'r')
         lines = config.readlines()
         pathToSave = lines[1].rstrip()
-        pathToInventory = lines[3].rstrip() + 'inventory.csv'
+        pathToInventory = lines[3].rstrip() + 'sensor_inventory.csv'
         instrument = lines[5].rstrip()
         config.close()
 
         #pathToSave = '' #'C:/Users/Graham Greig/Documents/Python Scripts/'
         #pathToInventory = 'C:/Users/Graham Greig/Desktop/production_database_scripts-master_old/production_database_scripts-master/inventory.csv'
         data = pd.read_csv(pathToInventory, header=1) 
-        IDs = data['ID'].tolist()
+        IDs = data['alternativeIdentifier'].tolist()
         SNs = data['#serialNumber'].tolist()
         locations = data['currentLocation'].tolist()
         sensorTypes = data['type'].tolist()
 
         #IDExists = false
-        targetID = 'VPX' + vpx + '-W' + wafer
+        targetID = 'VP' + vpx + '-W' + wafer
         if targetID not in IDs:
             outVar.set('Could not find this sensor in the inventory. Make sure the sensor '
             'has been recived and the inventory list has been updated.')
         else : 
             #Get the index of the row to have data extracted from.
-            filePrefix = 'VPX%s-W%05d_HMThickness_' % (vpx, int(wafer)) 
+            filePrefix = 'VP%s-W%05d_HMThickness_' % (vpx, int(wafer)) 
             row = IDs.index(targetID)
 
             #Get the strings to make the header file.
@@ -75,7 +75,7 @@ def SaveData():
             f = open(fullPath,'w+')
             f.write(fileName + '\n')
             f.write('Type: ' + sensorType + '\n')
-            f.write('Batch: VPX' + vpx + '\n')
+            f.write('Batch: VP' + vpx + '\n')
             f.write('Wafer: %05d\n' % int(wafer))
             f.write('Component: ' + SN + '\n')
             f.write('Date: ' + str(date) + '\n')
@@ -107,10 +107,10 @@ title.place(x = 25, y = 40 )
 savebutton = tk.Button(frame, text = "Save Data", command = lambda: SaveData())
 savebutton.place(x = entryX + 280, rely = 0.9)
 
-VPXLabel = tk.Label(frame, text = 'VPX')
+VPXLabel = tk.Label(frame, text = 'VP')
 VPXLabel.place(x = entryX, y = entryY)
-VPXBox = tk.Entry(frame, textvariable = vpxVar, justify = 'left' , width = 5)
-VPXBox.place(x = entryX + 30, y = entryY)
+VPXBox = tk.Entry(frame, textvariable = vpxVar, justify = 'left' , width = 6)
+VPXBox.place(x = entryX + 20, y = entryY)
 
 WaferLabel = tk.Label(frame, text = 'W')
 WaferLabel.place(x = entryX + 70, y = entryY)

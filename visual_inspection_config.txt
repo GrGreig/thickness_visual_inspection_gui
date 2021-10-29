@@ -1,4 +1,4 @@
 # Path to Data
 C:/Users/Graham Greig/Documents/Python Scripts/DataFileGUIs/Data/Visual Inspection/
 # Path to Inventory
-C:/Users/Graham Greig/Desktop/production_database_scripts-master_old/production_database_scripts-master/
+C:/Users/Graham Greig/Desktop/Sensor Probing/production_database_scripts/

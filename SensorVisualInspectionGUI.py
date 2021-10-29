@@ -45,18 +45,17 @@ def get_file_output_name_and_path(file_prefix, path_to_save):
 
 def get_config_data():
     """Extracts necessary data from the config file like the path to the inventory and the path to save."""
-    current_directory = os.path.dirname(__file__)
-    config = open((current_directory + '/visual_inspection_config.txt'), 'r')
+    config = open('visual_inspection_config.txt', 'r')
     lines = config.readlines()
     path_to_save = lines[1].rstrip()
-    path_to_inventory = lines[3].rstrip() + 'inventory.csv'
+    path_to_inventory = lines[3].rstrip() + 'sensor_inventory.csv'
     config.close()
     return path_to_inventory, path_to_save
 
 def get_sensor_data(path_to_inventory):
     """Gets lists of IDs, Serial numbers, locations and sensor types from the Inventory list."""
     data = pd.read_csv(path_to_inventory, header=1) 
-    IDs = data['ID'].tolist()
+    IDs = data['alternativeIdentifier'].tolist()
     SNs = data['#serialNumber'].tolist()
     locations = data['currentLocation'].tolist()
     sensor_types = data['type'].tolist()
@@ -98,13 +97,13 @@ def save_data():
         IDs, SNs, locations, sensor_types = get_sensor_data(path_to_inventory)
         
         #IDExists = false
-        target_id = 'VPX' + vpx + '-W' + wafer
+        target_id = 'VP' + vpx + '-W' + wafer
         if target_id not in IDs:
             output_text.set('Could not find this sensor in the inventory. Make sure the sensor '
             'has been recived and the inventory list has been updated.')
         else : 
             #Get the index of the row to have data extracted from.
-            file_prefix = 'VPX%s-W%05d_VisInspectionV2_' % (vpx, int(wafer)) 
+            file_prefix = 'VP%s-W%05d_VisInspectionV2_' % (vpx, int(wafer)) 
             row = IDs.index(target_id)
 
             #Get the strings to make the header for file.
@@ -122,7 +121,7 @@ def save_data():
             file = open(full_path,'w+')
             file.write(file_name + '\n')
             file.write('Type: ' + sensor_type + '\n')
-            file.write('Batch: VPX' + vpx + '\n')
+            file.write('Batch: VP' + vpx + '\n')
             file.write('Wafer: %05d\n' % int(wafer))
             file.write('Component: ' + SN + '\n')
             file.write('Date: ' + str(date) + '\n')
@@ -355,10 +354,10 @@ defect_location_label_6.place(x = 840, y = 510)
 defect_location_6_box = tk.Entry(frame, textvariable = location_variable_6, justify = 'left' , width = 30)
 defect_location_6_box.place(x = 840, y = 530)
 
-vpx_label = tk.Label(frame, text = 'VPX')
+vpx_label = tk.Label(frame, text = 'VP')
 vpx_label.place(x = entryX, y = entryY)
-vpx_box = tk.Entry(frame, textvariable = vpx_variable, justify = 'left' , width = 5)
-vpx_box.place(x = entryX + 30, y = entryY)
+vpx_box = tk.Entry(frame, textvariable = vpx_variable, justify = 'left' , width = 6)
+vpx_box.place(x = entryX + 20, y = entryY)
 
 wafer_label = tk.Label(frame, text = 'W')
 wafer_label.place(x = entryX + 70, y = entryY)
@@ -378,7 +377,7 @@ comment_box.place(x = entryX, y = entryY + 60)
 
 output_text_box = tk.Message(frame, textvariable = output_text, font = ('calibri', 10), width = 344, relief = 'sunken', justify = 'left')
 output_text_box.place(x = entryX, y = entryY + 250)
-output_text.set('Please enter the sensor VPX, wafer number and optional comment field. Select Pass of fail. To insert file names, browse for the files and'
+output_text.set('Please enter the sensor VP, wafer number and optional comment field. Select Pass of fail. To insert file names, browse for the files and'
 'shift select all you would like up to a maximum of 4 per defect. Select a defect type for each defect and explicitly describe the location of the defect.'
 'Location desctiptions should be in the format: Corner (top/bottom, left/wright), Edge (top, bottom, left, right), Guard ring (top, bottom, left, right), '
 'Segment number, strip(s) numbers (for the defects in the active area). Saving will produce a database ready .dat file.')
